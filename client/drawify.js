@@ -1,59 +1,18 @@
-function drawify(anchor, width, height) {
-    var canvas = document.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-        pos;
+// Bookmarklet helper to create a canvas to draw on within the next clicked element
+// - assumes Drawing is already defined
+function drawify(event) {
+    window.removeEventListener('click', drawify);
 
-    canvas.width = width || 600;
-    canvas.height = height || 400;
+    var canvas = document.createElement('canvas');
+
+    canvas.width = window.DRAWING_WIDTH || 600;
+    canvas.height = window.DRAWING_HEIGHT || 400;
     canvas.style.background = 'white';
     canvas.style.cursor = 'pointer';
 
-    // TODO: Connect socket
-    // TODO: Send points up socket
-    // TODO: Receive points from socket for known lines + continue drawing them
+    event.target.appendChild(canvas);
 
-    function point(event) {
-        return {
-            x: event.offsetX,
-            y: event.offsetY
-        };
-    }
-
-    function draw(next) {
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        ctx.lineTo(next.x, next.y);
-        ctx.stroke();
-        pos = next;
-    }
-
-    canvas.addEventListener('mousedown', function(event) {
-        pos = point(event);
-    });
-
-    canvas.addEventListener('mouseup', function(event) {
-        draw(point(event));
-        pos = null;
-    });
-
-    canvas.addEventListener('mousemove', function(event) {
-        if(pos) {
-            draw(point(event));
-        }
-    });
-
-    if(anchor && anchor.appendChild) {
-        anchor.appendChild(canvas);
-    } else {
-        document.body.appendChild(canvas);
-    }
-
-    return canvas;
+    // This goes nowhere...
+    return new Drawing(canvas);
 }
-
-// Run drawify on target of next click event
-function applyDrawify(event) {
-    drawify(event.target);
-    window.removeEventListener('click', applyDrawify);
-}
-window.addEventListener('click', applyDrawify);
+window.addEventListener('click', drawify);
