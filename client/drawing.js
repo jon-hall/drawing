@@ -46,9 +46,8 @@ MouseDrawer.prototype = Object.create(Drawer.prototype);
 // TODO: Socket event based drawer for remote users
 
 // Overall drawing app
-function Drawing(canvas) {
-    // TODO: Open a socket connection
-    // TODO: Add new clients to 'drawers'
+function Drawing(canvas, socket) {
+    // TODO: Add new socket clients to 'drawers'
     // TODO: Remove disconnected clients
     this.drawers = [new MouseDrawer(canvas)];
 }
