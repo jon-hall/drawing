@@ -19,35 +19,59 @@ function MouseDrawer(canvas) {
 
     Drawer.call(this, canvas);
 
-    function eventPoint(event) {
+    function event_point(event) {
         return {
             x: event.offsetX,
             y: event.offsetY
         };
     }
 
+    // TODO: Need to send this info up the socket..
     canvas.addEventListener('mousedown', function(event) {
-        _this.pos = eventPoint(event);
+        _this.pos = event_point(event);
     });
 
     canvas.addEventListener('mouseup', function(event) {
-        _this.draw(eventPoint(event));
+        _this.draw(event_point(event));
         _this.pos = null;
     });
 
     canvas.addEventListener('mousemove', function(event) {
         if(_this.pos) {
-            _this.draw(eventPoint(event));
+            _this.draw(event_point(event));
         }
     });
 }
 MouseDrawer.prototype = Object.create(Drawer.prototype);
 
-// TODO: Socket event based drawer for remote users
+// Socket event based drawer for remote users
+function SocketDrawer(canvas, id, socket) {
+    Drawer.call(this, canvas);
+
+    socket.on('move:' + id, function(pos) {
+        _this.pos = pos;
+    });
+
+    socket.on('draw:' + id, function(pos) {
+        _this.draw(pos);
+    });
+}
+SocketDrawer.prototype = Object.create(Drawer.prototype);
 
 // Overall drawing app
-function Drawing(canvas, socket) {
-    // TODO: Add new socket clients to 'drawers'
-    // TODO: Remove disconnected clients
-    this.drawers = [new MouseDrawer(canvas)];
+function Drawing(canvas, socket, our_id) {
+    var _this = this;
+
+    // Add new socket clients to 'drawers'
+    socket.on('client', function(id) {
+        _this.drawers[id] = new SocketDrawer(id, socket);
+    });
+
+    // Remove disconnected clients
+    socket.on('leave', function(id) {
+        delete _this.drawers[id];
+    });
+
+    this.drawers = {};
+    this.drawers[our_id] = new MouseDrawer(canvas);
 }
