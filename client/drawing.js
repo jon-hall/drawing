@@ -6,18 +6,23 @@ function Drawer(canvas) {
 }
 
 Drawer.prototype.draw = function (pos) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.pos.x, this.pos.y);
-    this.ctx.lineTo(pos.x, pos.y);
-    this.ctx.stroke();
+    if(this.pos) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.pos.x, this.pos.y);
+        this.ctx.lineTo(pos.x, pos.y);
+        this.ctx.stroke();
+    }
+
     this.pos = pos;
 };
 
 // Mouse event-based drawer for local user
-function MouseDrawer(canvas) {
+function MouseDrawer(canvas, socket, id) {
     var _this = this;
 
     Drawer.call(this, canvas);
+    this.socket = socket;
+    this.id = id;
 
     function event_point(event) {
         return {
@@ -26,9 +31,8 @@ function MouseDrawer(canvas) {
         };
     }
 
-    // TODO: Need to send this info up the socket..
     canvas.addEventListener('mousedown', function(event) {
-        _this.pos = event_point(event);
+        _this.move(event_point(event));
     });
 
     canvas.addEventListener('mouseup', function(event) {
@@ -43,6 +47,20 @@ function MouseDrawer(canvas) {
     });
 }
 MouseDrawer.prototype = Object.create(Drawer.prototype);
+
+MouseDrawer.prototype.draw = function(pos) {
+    // Send new point up the socket
+    this.socket.emit('draw:' + this.id, pos);
+
+    // Call base draw method
+    Drawer.prototype.draw.call(this, pos);
+};
+
+MouseDrawer.prototype.move = function(pos) {
+    // Send reposition up the socket
+    this.socket.emit('move:' + this.id, pos);
+    this._pos = pos;
+};
 
 // Socket event based drawer for remote users
 function SocketDrawer(canvas, id, socket) {
@@ -73,5 +91,5 @@ function Drawing(canvas, socket, our_id) {
     });
 
     this.drawers = {};
-    this.drawers[our_id] = new MouseDrawer(canvas);
+    this.drawers[our_id] = new MouseDrawer(canvas, socket, our_id);
 }
