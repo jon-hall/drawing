@@ -1,2 +1,2 @@
 # drawing
-TODO: drawing :art:
+drawing :art:
