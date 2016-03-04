@@ -81,7 +81,7 @@ function Drawing(canvas, socket, our_id) {
     var _this = this;
 
     // Add new socket clients to 'drawers'
-    socket.on('client', function(id) {
+    socket.on('join', function(id) {
         _this.drawers[id] = new SocketDrawer(id, socket);
     });
 
