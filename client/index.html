@@ -12,15 +12,25 @@
 
             link.textContent = 'drawing';
             link.href = 'javascript:(' + encodeURI((function() {
-                function load_script(script_name) {
+                function load_script(script_name, done) {
                     var script = document.createElement('script');
                     script.type = 'text/javascript';
                     script.src = 'BASE_URL/' + script_name;
+                    script.onload = script.onerror = done;
                     document.body.appendChild(script);
                 }
-                /* TODO: sockets... */
-                load_script('drawing.js');
-                load_script('drawify.js');
+                
+                load_script('drawing.js', function() {
+                    load_script('drawify.js', function() {
+                        load_script('socket.io/socket.io.js', function() {
+                           var socket = io();
+                           socket.on('ready', function(id) {
+                               // TODO: Update drawify
+                               drawify(socket, id);
+                           });
+                        });
+                    });
+                });
             }).toString().replace('BASE_URL', base_url).replace(/[\r\n]|\s\s/g, '')) + ')()';
             // Trim unnecessary whitespace from function and uri-encode it to create the link href
 
