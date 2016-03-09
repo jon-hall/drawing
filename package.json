@@ -1,0 +1,26 @@
+{
+  "name": "drawing",
+  "version": "0.0.0",
+  "description": "drawing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jon-hall/drawing.git"
+  },
+  "keywords": [
+    "drawing",
+    "canvas",
+    "draw",
+    "whiteboard",
+    "sketch"
+  ],
+  "author": "Jon Hall <jon_hall@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jon-hall/drawing/issues"
+  },
+  "homepage": "https://github.com/jon-hall/drawing#readme"
+}
