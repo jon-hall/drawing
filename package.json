@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/jon-hall/drawing/issues"
   },
-  "homepage": "https://github.com/jon-hall/drawing#readme"
+  "homepage": "https://github.com/jon-hall/drawing#readme",
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  }
 }
