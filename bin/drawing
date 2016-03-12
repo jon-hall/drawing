@@ -1,1 +1,6 @@
 #!/usr/bin/env node
+'use strict';
+
+const http = require('http'),
+  socketio = require('socket.io'),
+  drawing = require('../');
