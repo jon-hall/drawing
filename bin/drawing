@@ -1,6 +1,22 @@
 #!/usr/bin/env node
 'use strict';
 
-const http = require('http'),
-  socketio = require('socket.io'),
-  drawing = require('../');
+const path = require('path'),
+    http = require('http'),
+    express = require('express'),
+    app = express(),
+    server = http.createServer(app),
+    io = require('socket.io')(server),
+    drawing = require('../'),
+    port = process.env.PORT || 3000;
+
+// Listen for requests
+server.listen(port, function () {
+    console.log('Server listening at port %d', port);
+});
+
+// Serve bookmarklet-creating files from client
+app.use(express.static(path.resolve(__dirname, '../client'));
+
+// Apply our drawing socket.io middleware
+io.use(drawing.io);
