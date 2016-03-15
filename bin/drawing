@@ -16,7 +16,7 @@ server.listen(port, function () {
 });
 
 // Serve bookmarklet files and bookmarklet creating page from client folder
-app.use(express.static(path.resolve(__dirname, '../client'));
+app.use(express.static(path.resolve(__dirname, '../client')));
 
 // Apply our drawing socket.io middleware
 io.use(drawing.io);
