@@ -19,4 +19,4 @@ server.listen(port, function () {
 app.use(express.static(path.resolve(__dirname, '../client')));
 
 // Apply our drawing socket.io middleware
-io.use(drawing.io);
+io.use(drawing.io());
