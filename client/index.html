@@ -23,14 +23,14 @@
                 load_script('drawing.js', function() {
                     load_script('drawify.js', function() {
                         load_script('socket.io/socket.io.js', function() {
-                           var socket = io();
+                           var socket = io('BASE_URL');
                            socket.on('ready', function(id) {
                                drawify(socket, id);
                            });
                         });
                     });
                 });
-            }).toString().replace('BASE_URL', base_url).replace(/[\r\n]|\s\s/g, '')) + ')()';
+            }).toString().replace(/BASE_URL/g, base_url).replace(/[\r\n]|\s\s/g, '')) + ')()';
             // Trim unnecessary whitespace from function and uri-encode it to create the link href
 
             document.body.appendChild(link);
