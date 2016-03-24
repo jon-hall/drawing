@@ -59,11 +59,13 @@ MouseDrawer.prototype.draw = function(pos) {
 MouseDrawer.prototype.move = function(pos) {
     // Send reposition up the socket
     this.socket.emit('move:' + this.id, pos);
-    this._pos = pos;
+    this.pos = pos;
 };
 
 // Socket event based drawer for remote users
 function SocketDrawer(canvas, id, socket) {
+    var _this = this;
+
     Drawer.call(this, canvas);
 
     socket.on('move:' + id, function(pos) {
@@ -72,6 +74,7 @@ function SocketDrawer(canvas, id, socket) {
 
     socket.on('draw:' + id, function(pos) {
         _this.draw(pos);
+        _this.pos = pos;
     });
 }
 SocketDrawer.prototype = Object.create(Drawer.prototype);
@@ -79,10 +82,9 @@ SocketDrawer.prototype = Object.create(Drawer.prototype);
 // Overall drawing app
 function Drawing(canvas, socket, our_id) {
     var _this = this;
-
     // Add new socket clients to 'drawers'
     socket.on('join', function(id) {
-        _this.drawers[id] = new SocketDrawer(id, socket);
+        _this.drawers[id] = new SocketDrawer(canvas, id, socket);
     });
 
     // Remove disconnected clients
@@ -92,4 +94,6 @@ function Drawing(canvas, socket, our_id) {
 
     this.drawers = {};
     this.drawers[our_id] = new MouseDrawer(canvas, socket, our_id);
+
+    socket.emit('ready_to_draw');
 }
