@@ -3,14 +3,52 @@
     <head>
         <meta charset="utf-8">
         <title>drawing</title>
+        <style media="screen">
+            /* get everything centering */
+            html,body {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* make the link less gross */
+            a {
+                color: #444;
+                text-decoration: none;
+                text-align: center;
+                display: inline-block;
+                background: #eee;
+                border-radius: 10px;
+                font-family: sans-serif;
+                font-size: 40px;
+                padding: 2em;
+                margin: 2em;
+            }
+
+            /*
+                use a pseudo for the instruction text, this way it is part of the draggable link,
+                but isn't considered part of the text that the browser uses for the link name
+            */
+            a::before {
+                color: #888;
+                content: 'Drag this link to your bookmark bar, then open the bookmark on your target site and click where you want to place the whiteboard';
+                display: block;
+                font-size: 22px;
+                padding-bottom: 1em;
+            }
+        </style>
     </head>
     <body>
+        <span>
+
+        </span>
         <script type="text/javascript">
             var link = document.createElement('a'),
                 // Work out the path for the links by trimming '[index.html]' + query string from the current page url
                 base_url = window.location.href.replace(window.location.search, '').replace(/(index\.html)$/, '');
 
-            link.textContent = 'drawing';
+            link.textContent = 'Add whiteboard';
             link.href = 'javascript:(' + encodeURI((function() {
                 function load_script(script_name, done) {
                     var script = document.createElement('script');
