@@ -6,10 +6,15 @@ function Drawer(canvas) {
 }
 
 Drawer.prototype.draw = function (pos) {
+    // Since the canvas may be a different size than specified, due to styling etc., we need to scale
+    // Calculate scale every time we draw, in-case it changes for some reason
+    var xScale = this.canvas.width / this.canvas.offsetWidth,
+        yScale = this.canvas.height / this.canvas.offsetHeight;
+
     if(this.pos) {
         this.ctx.beginPath();
-        this.ctx.moveTo(this.pos.x, this.pos.y);
-        this.ctx.lineTo(pos.x, pos.y);
+        this.ctx.moveTo(xScale * this.pos.x, yScale * this.pos.y);
+        this.ctx.lineTo(xScale * pos.x,  yScale * pos.y);
         this.ctx.stroke();
     }
 
@@ -17,19 +22,19 @@ Drawer.prototype.draw = function (pos) {
 };
 
 // Mouse event-based drawer for local user
+function event_point(event) {
+    return {
+        x: event.offsetX,
+        y: event.offsetY
+    };
+}
+
 function MouseDrawer(canvas, socket, id) {
     var _this = this;
 
     Drawer.call(this, canvas);
     this.socket = socket;
     this.id = id;
-
-    function event_point(event) {
-        return {
-            x: event.offsetX,
-            y: event.offsetY
-        };
-    }
 
     canvas.addEventListener('mousedown', function(event) {
         _this.move(event_point(event));
