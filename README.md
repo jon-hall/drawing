@@ -1,5 +1,5 @@
-# drawing
-drawing :art:
+# drawing :art:
+Simple multi-user whiteboard-as-a-service using websockets and bookmarklets.
 
 #### Drawing server
 Install
